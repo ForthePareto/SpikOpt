@@ -2,9 +2,11 @@ from collections import OrderedDict
 
 from lib.MultiObectiveDeap import Nsga2Optimizer
 from lib.Simulator import Simulator
-
+import threading
 AVAILABE_OPTIMIZERS = {"NSGA2": Nsga2Optimizer}
-
+import matplotlib.pyplot as plt
+#required to avoid threading errors
+plt.switch_backend('agg')
 
 class Fitter:
     def __init__(self, model_type: str, model_file: str, model_name: str, **kwargs):
@@ -14,6 +16,7 @@ class Fitter:
         self.requested_measurments = None
         self.stimulation_protocol = None
         self.parameters_info = None
+        self.optimizer_progress = 0
         self.experimental_data = OrderedDict()  # measurement_name: weight, mean, std
         self.target_parameters = OrderedDict()  # param_name : range
 
@@ -58,13 +61,18 @@ class Fitter:
             raise ValueError("Experimental data is not provided")
 
         self.optimizer.setup(config)
-        pop,logbook = self.optimizer.optimize()
-        self.best_params , self.best_errors = self.optimizer.get_results(pop)
+        self.optimizer_progress = 0
+        pop, logbook = self.optimizer.optimize(callbacks=[self.optimization_callback])
+        self.best_params, self.best_errors = self.optimizer.get_results(pop)
         self.optimizer.plot_convergence()
-        return self.best_params , self.best_errors
+        return self.best_params, self.best_errors
 
-    def save_to_file(self,protocol:dict, results: list,file_name="results.json"):
-        self.optimizer.save_results(protocol,results,file_name)
+    def save_to_file(self, protocol: dict, results: list, file_name="results.json"):
+        self.optimizer.save_results(protocol, results, file_name)
+
+    def optimization_callback(self):
+        self.optimizer_progress += 1
+        print(self.optimizer_progress)
 
 
 
@@ -82,43 +90,23 @@ if __name__ == '__main__':
         # ---------------------------------------------------------------------------- #
         "model_meta_data": {"model_type": "Nmodel", "model_file": "5CompMy_temp.hoc", "model_name": "fivecompMy"},
         # ----------------------------------parameters_info must be list of dicts---------------------------------- #
-        "parameters_info": [ {"location": "soma", "name":"gnabar_NafSmb1","value":0.0,"low":0.0,"high":1.0},
-        {"location": "soma", "name":"gkdrbar_KdrSmb1","value":0.0,"low":0.0,"high":1.0},
-        {"location": "soma", "name":"gcanbar_CaSmb1","value":0.0,"low":0.0,"high":1.0} 
+        "parameters_info": [{"location": "soma", "name": "gnabar_NafSmb1", "value": 0.0, "low": 0.0, "high": 1.0},
+                            {"location": "soma", "name": "gkdrbar_KdrSmb1",
+                                "value": 0.0, "low": 0.0, "high": 1.0},
+                            {"location": "soma", "name": "gcanbar_CaSmb1",
+                                "value": 0.0, "low": 0.0, "high": 1.0}
                             ],
         # ---------------------------------experimental_data must be OrderedDict-------------------------------------- #
-        "experimental_data":OrderedDict ({"Rheobase":{"weight":1.0,"mean": 7.88,"std":None},
-                              "AP Width":{"weight":1.0,"mean":0.8,"std":None}  
-                            })
+        "experimental_data": OrderedDict({"Rheobase": {"weight": 1.0, "mean": 7.88, "std": None},
+                                          "AP Width": {"weight": 1.0, "mean": 0.8, "std": None}
+                                          })
 
     }
-    fitter.fit(config)
-    # print(len(params))
-    # conductances = []
-    # i=0
-    # for  section in params:
-    #     # print(section[0])
-    #     # print(section[1])
-    #     for mech in section[1]: 
-    #         if mech[0] != "morphology":
-    #             for param in mech[1]:
-    #                 conductances.append([i,section[0].split(".")[-1] , param])
-    #                 i+=1
-        
-    # print(conductances)
+    # fitter.fit(config)
+    t1 = threading.Thread(target=fitter.fit, args=(config,))
+    t1.setDaemon(True)
 
-    def get_list_of_parameters(params):
-        conductances = []
-        i=0
-        for  section in params:
-            # print(section[0])
-            # print(section[1])
-            for mech in section[1]: 
-                if mech[0] != "morphology":
-                    for param in mech[1]:
-                        conductances.append([i,section[0].split(".")[-1] , param])
-                        i+=1
-        return conductances
-    
-
-    print(get_list_of_parameters(params))
+    t1.start()
+    # print("fuck opt")
+    t1.join()
+    print(fitter.optimizer_progress)

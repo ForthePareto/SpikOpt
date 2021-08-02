@@ -122,7 +122,7 @@ class Nsga2Optimizer:
 
         return errors
 
-    def optimize(self,callbacks = None ,save_last=False ,plot=False):
+    def optimize(self,callbacks = None ,save_last=True ,plot=False):
 
         # The parent and offspring population size are set the same
         MU = self.offspring_size

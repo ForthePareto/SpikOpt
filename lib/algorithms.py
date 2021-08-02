@@ -323,7 +323,7 @@ def eaMuPlusLambda(population, toolbox, mu, lambda_, cxpb, mutpb, ngen,
         logbook.record(gen=gen, nevals=len(invalid_ind), **record)
         if callbacks is not None:
             for callback in callbacks:
-                callback(generation=gen)
+                callback()
         if verbose:
             print(logbook.stream)
 
