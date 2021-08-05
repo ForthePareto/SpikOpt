@@ -8,17 +8,32 @@ import "../controls"
 Item {
     Rectangle {
         id: rectangle
+        
         color: "#2c313c"
         anchors.fill: parent
 
+        Label {
+            id: label
+            
+            x: 307
+            color: "#ffffff"
+            text: qsTr("Settings")
+            anchors.top: parent.top
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            anchors.topMargin: 50
+            font.pointSize: 17
+            anchors.horizontalCenter: parent.horizontalCenter
+        }
 
         Rectangle {
             id: rectangleFore
+            
             width: 350
             height: 201
             color: "#242936"
             anchors.top: label.bottom
-            anchors.topMargin: 15
+            anchors.topMargin: 30
             anchors.horizontalCenter: parent.horizontalCenter
             clip: true
 
@@ -31,10 +46,12 @@ Item {
 
                 RowLayout {
                     id: row1
+                    
                     Layout.fillWidth: true
 
                     Label {
                         id: label1
+                        
                         color: "#f6f7f7"
                         text: qsTr("Random Seed:")
                         verticalAlignment: Text.AlignVCenter
@@ -42,7 +59,7 @@ Item {
 
                     TextField {
                         id: randSeed
-                        Layout.minimumWidth: 30
+                        
                         Layout.maximumWidth: 55
                         Layout.maximumHeight: 26
                         Layout.alignment: Qt.AlignRight
@@ -59,10 +76,12 @@ Item {
 
                 RowLayout {
                     id: row2
+                    
                     Layout.fillWidth: true
 
                     Label {
                         id: label2
+                        
                         color: "#f6f7f7"
                         text: qsTr("Population Size:")
                         verticalAlignment: Text.AlignVCenter
@@ -70,6 +89,7 @@ Item {
 
                     TextField {
                         id: stimPosition
+                        
                         Layout.maximumWidth: 55
                         Layout.maximumHeight: 26
                         Layout.alignment: Qt.AlignRight
@@ -86,10 +106,12 @@ Item {
 
                 RowLayout {
                     id: row3
+                    
                     Layout.fillWidth: true
 
                     Label {
                         id: label3
+                        
                         color: "#f6f7f7"
                         text: qsTr("Number of Generations:")
                         verticalAlignment: Text.AlignVCenter
@@ -97,6 +119,7 @@ Item {
 
                     TextField {
                         id: numGenerations
+                        
                         Layout.maximumHeight: 26
                         Layout.maximumWidth: 55
                         Layout.alignment: Qt.AlignRight
@@ -114,10 +137,12 @@ Item {
 
                 RowLayout {
                     id: row4
+                    
                     Layout.fillWidth: true
 
                     Label {
                         id: label4
+                        
                         color: "#f6f7f7"
                         text: qsTr("Offspring Size:")
                         verticalAlignment: Text.AlignVCenter
@@ -125,6 +150,7 @@ Item {
 
                     TextField {
                         id: offSpringSize
+                        
                         Layout.maximumHeight: 26
                         Layout.maximumWidth: 55
                         Layout.alignment: Qt.AlignRight
@@ -142,10 +168,12 @@ Item {
 
                 RowLayout {
                     id: row5
+                    
                     Layout.fillWidth: true
 
                     Label {
                         id: label5
+                        
                         color: "#f6f7f7"
                         text: qsTr("Mutation Probability:")
                         verticalAlignment: Text.AlignVCenter
@@ -153,6 +181,7 @@ Item {
 
                     TextField {
                         id: mutationProb
+                        
                         Layout.maximumWidth: 55
                         Layout.maximumHeight: 26
                         Layout.alignment: Qt.AlignRight
@@ -222,17 +251,8 @@ Item {
             }
         }
 
-        Label {
-            id: label
-            x: 307
-            color: "#ffffff"
-            text: qsTr("Settings")
-            anchors.top: parent.top
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            anchors.topMargin: 50
-            font.pointSize: 17
-            anchors.horizontalCenter: parent.horizontalCenter
+        Connections {
+            target: backend
         }
     }
 }
@@ -243,6 +263,6 @@ Item {
 
 /*##^##
 Designer {
-    D{i:0;autoSize:true;height:480;width:640}D{i:3}
+    D{i:0;autoSize:true;height:480;width:640}
 }
 ##^##*/
