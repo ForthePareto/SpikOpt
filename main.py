@@ -32,10 +32,7 @@ class MainWindow(QObject):
             "element3": "0.63541"
         }
 
-        self.resFit = {
-            "element1": "Soma",
-            "element2": "0.63541"
-        }
+        self.resFit = {"element1": "Soma", "element2": "0.63541"}
 
         self.updated = 0
         self.updatedSections = 0
@@ -75,7 +72,7 @@ class MainWindow(QObject):
                 "Offspring Size": 100,
                 "Mutation Probability": 0.3
             },
-            # ---------------------------------------------------------------------------- #
+            # ----------------------------------------------------------------#
             "stimulation_protocol": {
                 "Protocol Name": "IClamp",
                 "Stimulus Type": "Step",
@@ -90,13 +87,13 @@ class MainWindow(QObject):
                 "Vinit": -65,
                 "T stop": 500
             },
-            # ---------------------------------------------------------------------------- #
+            # ----------------------------------------------------------------#
             "model_meta_data": {
                 "model_type": "Nmodel",
                 "model_file": "5CompMy_temp.hoc",
                 "model_name": "fivecompMy"
             },
-            # ----------------------------------parameters_info must be list of dicts---------------------------------- #
+            # ---------------parameters_info must be list of dicts-----------#
             "parameters_info": [{
                 "location": "soma",
                 "name": "gnabar_NafSmb1",
@@ -116,7 +113,7 @@ class MainWindow(QObject):
                 "low": 0.0,
                 "high": 1.0
             }],
-            # ---------------------------------experimental_data must be OrderedDict-------------------------------------- #
+            # ---------------experimental_data must be OrderedDict------------#
             "experimental_data":
             OrderedDict({
                 "AP Height": {
@@ -162,10 +159,11 @@ class MainWindow(QObject):
     @Slot()
     def fetchModel(self):
         self.fitter = Fitter("Nmodel", self.ModelPath, self.ModelName)
-        self.channels = self.fitter.fetch_model_channels()  # gui first page
+        self.channels = self.fitter.fetch_model_channels(
+        )  # gui first page
         for i in list(self.channels.keys()):
             self.sections.append(i.split(".")[-1])
-        print(self.sections)    
+        print(self.sections)
         for key, val in self.channels.items():
             for i in val:
                 self.paramList = {
@@ -231,12 +229,9 @@ class MainWindow(QObject):
                 "element3": i[2]
             }
             self.appResultBufferParam.emit(json.dumps(self.resParam))
-        
+
         for i in errors:
-            self.resFit = {
-                "element1": i[0],
-                "element2": i[1]
-            }
+            self.resFit = {"element1": i[0], "element2": i[1]}
             self.appResultBufferFitness.emit(json.dumps(self.resFit))
 
     @Slot()
@@ -246,11 +241,13 @@ class MainWindow(QObject):
 
     @Slot(str, str)
     def recieveOptimizerSetting(self, key, value):
-        self.OptimizerSettings[key] = (value if (type(value) == type(self.OptimizerSettings[key])) else float(value))
+        self.OptimizerSettings[key] = (value if (type(value) == type(
+            self.OptimizerSettings[key])) else float(value))
 
     @Slot(str, str)
     def recieveSigSettings(self, key, value):
-        self.sigSettings[key] = (value if (type(value) == type(self.sigSettings[key])) else float(value))
+        self.sigSettings[key] = (value if (type(value) == type(
+            self.sigSettings[key])) else float(value))
 
     @Slot(str, str, str, str)
     def recieveParam(self, key, value, lowerbound, upperbound):
@@ -292,8 +289,14 @@ class MainWindow(QObject):
     def saveRes(self):
         self.fitter.save_to_file(self.sigSettings, self.ResParam)
 
+
 if __name__ == "__main__":
+
     app = QGuiApplication(sys.argv)
+
+    # Set App Extra Info
+    app.setOrganizationName("ForThePareto")
+    app.setOrganizationDomain("N/A")
 
     # Get Context
     main = MainWindow()
