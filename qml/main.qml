@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
+import QtQuick.Layouts 1.15
 import QtGraphicalEffects 1.15
 import "controls"
 
@@ -78,6 +79,7 @@ Window {
 
     Rectangle {
         id: bg
+
         color: "#2c313c"
         border.color: "#383e4c"
         border.width: 1
@@ -93,6 +95,7 @@ Window {
 
         Rectangle {
             id: appContainer
+
             color: "#00000000"
             anchors.fill: parent
             anchors.rightMargin: 1
@@ -102,6 +105,7 @@ Window {
 
             Rectangle {
                 id: topBar
+
                 height: 60
                 color: "#1c1d20"
                 anchors.left: parent.left
@@ -117,6 +121,7 @@ Window {
 
                 Rectangle {
                     id: topBarDescription
+
                     y: 8
                     height: 25
                     color: "#282c34"
@@ -129,6 +134,7 @@ Window {
 
                     Label {
                         id: labelTopInfo
+
                         color: "#5f6a82"
                         text: qsTr("Tune Neural Models")
                         anchors.left: parent.left
@@ -144,6 +150,7 @@ Window {
 
                     Label {
                         id: labelTopRightInfo
+
                         color: "#5f6a82"
                         text: qsTr("HOME")
                         anchors.left: labelTopInfo.right
@@ -161,6 +168,7 @@ Window {
 
                 Rectangle {
                     id: titleBar
+
                     height: 35
                     color: "#00000000"
                     anchors.left: parent.left
@@ -179,6 +187,7 @@ Window {
 
                     Image {
                         id: appIcon
+
                         width: 28
                         anchors.left: parent.left
                         anchors.top: parent.top
@@ -200,6 +209,7 @@ Window {
 
                     Label {
                         id: labelAppTitle
+
                         color: "#c3cbdd"
                         text: qsTr("Neural Model Optimization toolkit")
                         anchors.left: appIcon.right
@@ -214,6 +224,7 @@ Window {
 
                 Row {
                     id: btnRow
+
                     x: 0
                     y: 0
                     width: 105
@@ -225,6 +236,7 @@ Window {
 
                     TopBarBtn {
                         id: minimizeBtn
+
                         onClicked: {
                             mainWindow.showMinimized()
                             internal.restoreMargins()
@@ -233,12 +245,14 @@ Window {
 
                     TopBarBtn {
                         id: maximizeBtn
+
                         btnIconSource: "../images/svg_images/maximize_icon.svg"
                         onClicked: internal.maximizeRestore()
                     }
 
                     TopBarBtn {
                         id: closeBtn
+
                         btnColorClicked: "#ff0000"
                         btnIconSource: "../images/svg_images/close_icon.svg"
                         onClicked: mainWindow.close()
@@ -248,27 +262,32 @@ Window {
 
             Rectangle {
                 id: content
-                color: "#00000000"
+
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.top: topBar.bottom
                 anchors.bottom: parent.bottom
                 anchors.topMargin: 0
+                
+                color: "#00000000"
 
                 Rectangle {
                     id: leftMenu
+
                     width: 70
-                    color: "#1c1d20"
                     anchors.left: parent.left
                     anchors.top: parent.top
                     anchors.bottom: parent.bottom
-                    clip: true
                     anchors.leftMargin: 0
                     anchors.bottomMargin: 0
                     anchors.topMargin: 0
+                    
+                    color: "#1c1d20"
+                    clip: true
 
                     PropertyAnimation {
                         id: leftMenuAnimation
+
                         target: leftMenu
                         property: "width"
                         to: (leftMenu.width == 70) ? 170 : 70
@@ -278,6 +297,7 @@ Window {
 
                     Column {
                         id: column
+
                         width: 70
                         anchors.left: parent.left
                         anchors.right: parent.right
@@ -290,9 +310,12 @@ Window {
 
                         LeftMenuBtn {
                             id: homeBtn
+
                             width: leftMenu.width
                             text: "Home"
+                            
                             isActiveMenu: true
+                            
                             onClicked: {
                                 if (currPage != 0) {
                                     currPage = 0
@@ -308,11 +331,15 @@ Window {
 
                         LeftMenuBtn {
                             id: tuningBtn
+
                             width: leftMenu.width
+                            
                             text: "Tuning"
-                            enabled: false
                             btnIconSource: "../images/svg_images/tuning_icon.svg"
+                            
+                            enabled: false
                             isActiveMenu: false
+                            
                             onClicked: {
                                 if (currPage != 2) {
                                     currPage = 2
@@ -330,11 +357,14 @@ Window {
 
                         LeftMenuBtn {
                             id: measurementsBtn
+
                             width: leftMenu.width
+                            
                             text: "Result"
-                            enabled: false
                             btnIconSource: "../images/svg_images/measurements_icon.svg"
+                            enabled: false
                             isActiveMenu: false
+                            
                             onClicked: {
                                 if (currPage != 1) {
                                     currPage = 1
@@ -352,14 +382,15 @@ Window {
 
                     LeftMenuBtn {
                         id: settingsBtn
-                        x: 0
-                        y: 323
+
                         width: leftMenu.width
-                        text: "Settings"
                         anchors.bottom: parent.bottom
+                        anchors.bottomMargin: 25
+                        
+                        text: "Settings"
                         btnIconSource: "../images/svg_images/settings_icon.svg"
                         isActiveMenu: false
-                        anchors.bottomMargin: 25
+                        
                         onClicked: {
                             if (currPage != 3) {
                                 currPage = 3
@@ -376,6 +407,7 @@ Window {
 
                 Rectangle {
                     id: pagesContent
+
                     color: "#00000000"
                     anchors.left: leftMenu.right
                     anchors.right: parent.right
@@ -389,6 +421,7 @@ Window {
 
                     StackView {
                         id: stackView
+
                         anchors.fill: parent
                         Component.onCompleted: {
                             stackView.push(Qt.resolvedUrl("pages/waitingPage.qml"))
@@ -403,6 +436,7 @@ Window {
 
                 Rectangle {
                     id: pagesBottomBar
+
                     color: "#282c34"
                     anchors.left: leftMenu.right
                     anchors.right: parent.right
@@ -415,6 +449,7 @@ Window {
 
                     Label {
                         id: labelBottomBar
+
                         color: "#5f6a82"
                         text: qsTr("Build: 1.0")
                         anchors.left: parent.left
@@ -429,6 +464,7 @@ Window {
                     }
                     MouseArea {
                         id: resizeWindow
+
                         x: 884
                         y: 0
                         width: 25
@@ -450,6 +486,7 @@ Window {
 
                         Image {
                             id: resizeImage
+
                             width: 16
                             height: 16
                             anchors.fill: parent
@@ -465,20 +502,21 @@ Window {
                 }
             }
         }
-    }
-    DropShadow {
-        anchors.fill: bg
-        horizontalOffset: 0
-        verticalOffset: 0
-        radius: 10
-        samples: 16
-        color: "#80000000"
-        source: bg
-        z: 0
+
+        layer.enabled: true // Set Layer for Enable
+        layer.effect: DropShadow {
+            transparentBorder: true
+            horizontalOffset: 0
+            verticalOffset: 0
+            radius: 10
+            samples: 16
+            color: "#80000000"
+        }
     }
 
     MouseArea {
         id: resizeLeft
+
         width: 10
         anchors.left: parent.left
         anchors.top: parent.top
@@ -498,6 +536,7 @@ Window {
 
     MouseArea {
         id: resizeRight
+
         width: 10
         anchors.right: parent.right
         anchors.top: parent.top
@@ -517,6 +556,7 @@ Window {
 
     MouseArea {
         id: resizeBottom
+
         height: 10
         anchors.left: parent.left
         anchors.right: parent.right
