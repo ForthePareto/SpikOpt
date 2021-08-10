@@ -45,13 +45,11 @@ class Fitter:
             raise ValueError("Simulator is not initialized")
         return self.simulator.fetch_model_channels()
 
-    def fit(self, config: dict, measurer_type: str = "efel", optimizer_type: str = "NSGA2", **kwargs):  # TODO: ask about parallism
+    def fit(self, config: dict, measurer_type: str = "efel", optimizer_type: str = "NSGA2", callbacks = None , **kwargs):  # TODO: ask about parallism
         self.optimizer = AVAILABE_OPTIMIZERS[optimizer_type]()
 
         self.stimulation_protocol = config.get("stimulation_protocol", None)
-        """Format:  {"Protocol Name": "IClamp دروب داون", "Stimulus Type":"Step دروب داون" , "Amplitude":"21" ,"Delay":"150", "Duration":"3", 
-        "Stimulus Section":"Iseg دروب داون","Stimulus Position":"0.5" ,"Param":"V دروب", "Recording Section":"Soma دروب د","Recording Position":"0.5", "Vinit":"-65", "T stop":"500"}
-        """
+
         if self.stimulation_protocol is None:
             raise ValueError("stimulation protocol is not provided")
 
@@ -62,7 +60,7 @@ class Fitter:
 
         self.optimizer.setup(config)
         self.optimizer_progress = 0
-        pop, logbook = self.optimizer.optimize(callbacks=[self.optimization_callback])
+        pop, logbook = self.optimizer.optimize(callbacks)
         self.best_params, self.best_errors = self.optimizer.get_results(pop)
         self.optimizer.plot_convergence()
         return self.best_params, self.best_errors
@@ -103,7 +101,7 @@ if __name__ == '__main__':
 
     }
     # fitter.fit(config)
-    t1 = threading.Thread(target=fitter.fit, args=(config,))
+    t1 = threading.Thread(target=fitter.fit(callbacks=[fitter.optimization_callback]), args=(config,))
     t1.setDaemon(True)
 
     t1.start()
