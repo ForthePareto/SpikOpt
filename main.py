@@ -67,9 +67,9 @@ class MainWindow(QObject):
         self.config = {
             "Optimizer": {
                 "Random Seed": 1,
-                "Population Size": 100,
-                "Number of Generations": 50,
-                "Offspring Size": 100,
+                "Population Size": 2,
+                "Number of Generations": 10,
+                "Offspring Size": 2,
                 "Mutation Probability": 0.3
             },
             # ----------------------------------------------------------------#
@@ -141,6 +141,8 @@ class MainWindow(QObject):
     enableTune = Signal()
     pushRes = Signal()
     pushWait = Signal()
+    tuneProgress = Signal(int)
+    numOfGens = Signal(int)
 
     # Function
     @Slot(str)
@@ -206,13 +208,22 @@ class MainWindow(QObject):
     def tuneModel(self):
         print("Tuning!!")
         self.pushWait.emit()
+        self.config["Optimizer"] = self.OptimizerSettings
         self.config["stimulation_protocol"] = self.sigSettings
         self.config["parameters_info"] = self.parameters_info
         self.config["experimental_data"] = OrderedDict(
             self.experimental_data)
-        self.ResParam, self.ResFit = self.fitter.fit(self.config)
+        self.ResParam, self.ResFit = self.fitter.fit(
+            self.config, callbacks=self.updateProgress())
         self.sendResults(self.ResParam, self.ResFit)
         self.pushRes.emit()
+
+    # Function
+    @Slot()
+    def updateProgress(self):
+        self.fitter.optimizer_progress += 1
+        print("Progress: ", self.fitter.optimizer_progress)
+        self.tuneProgress.emit(self.fitter.optimizer_progress)
 
     # Function
     @Slot(str)
@@ -234,6 +245,14 @@ class MainWindow(QObject):
             self.resFit = {"element1": i[0], "element2": i[1]}
             self.appResultBufferFitness.emit(json.dumps(self.resFit))
 
+    # Function
+    @Slot()
+    def sendNumberOfGens(self):
+        print("No. of Gens: ",
+              self.OptimizerSettings["Number of Generations"])
+        self.numOfGens.emit(
+            self.OptimizerSettings["Number of Generations"])
+
     @Slot()
     def getSigSettings(self):
         self.getText.emit("all")
@@ -241,8 +260,15 @@ class MainWindow(QObject):
 
     @Slot(str, str)
     def recieveOptimizerSetting(self, key, value):
-        self.OptimizerSettings[key] = (value if (type(value) == type(
-            self.OptimizerSettings[key])) else float(value))
+        if key == "Mutation Probability":
+            self.OptimizerSettings[key] = (value if (
+                type(value) == type(self.OptimizerSettings[key])) else
+                                           float(value))
+        else:
+            self.OptimizerSettings[key] = (value if (
+                type(value) == type(self.OptimizerSettings[key])) else
+                                           int(value))
+        print("Recieved:", key, " ", value)
 
     @Slot(str, str)
     def recieveSigSettings(self, key, value):
