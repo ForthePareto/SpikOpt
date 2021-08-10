@@ -9,6 +9,7 @@ Item {
 
         BusyIndicator {
             id: busyIndicator
+
             x: 290
             y: 133
             anchors.verticalCenter: parent.verticalCenter
@@ -67,8 +68,35 @@ Item {
                     }
                 }
         }
-    }
 
+        ProgressBar {
+            id: progressBar
+
+            x: 241
+
+            anchors.top: busyIndicator.bottom
+            anchors.topMargin: 51
+            anchors.horizontalCenter: parent.horizontalCenter
+
+            from: 0
+            to: 100
+            value: 0
+
+            Component.onCompleted: backend.sendNumberOfGens()
+        }
+
+        Connections {
+            target: backend
+
+            function onTuneProgress(progress) {
+                progressBar.value = progress
+            }
+
+            function onNumOfGens(num) {
+                progressBar.to = num
+            }
+        }
+    }
 }
 
 /*##^##
