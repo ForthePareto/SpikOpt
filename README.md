@@ -2,7 +2,8 @@
 ## Motivation
 Neural computational models are a great resource in studying the nervous system, and muscle control. They allow studying cellular mechanisms and simulating neural signals that are impossible to acquire from living animals. Neuron computational models are complex non-linear systems that require high computational resources in operation and development. To bring these models into their optimumuse, they require optimization to certain electrical behaviours and measurements to match and mimic experimental recordings from living cells, so that simulated data from these models would be related to the living systems. Due to the high complexity of these models , manual hand tuning is the main method used in developing these models and calibrating them to experimental data.
 ## Project Description
-The goal of this project is to build a semi/full automated optimization tool to help save time and resources in calibrating neural computational models to experimental measurements. This optimization tool should be able to learn the system parameters that reproduce experimental data
+The goal of this project is to build a semi/full automated optimization tool to help save time and resources in calibrating neural computational models to experimental measurements. This optimization tool should be able to learn the system parameters that reproduce experimental data.
+Please refer to our [Paper](Neural_Model_Optimization_Toolkit.pdf).
 
 ## Installation
 To install the required dependencies, run the following command:  
